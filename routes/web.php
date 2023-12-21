@@ -16,3 +16,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 })->name('index');
+
+Route::get('hotels', [App\Http\Controllers\HotelController::class, 'index'])->name('hotels.index');
+
+Route::group(['prefix' => 'admin'], function () {
+    Voyager::routes();
+});
