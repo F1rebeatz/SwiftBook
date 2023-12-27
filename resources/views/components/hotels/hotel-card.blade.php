@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col justify-between p-4">
         <div>
             <a class="block text-grey-darkest mb-2 font-bold"
-               href="{{ route('hotels.show', ['hotel' => $hotel]) }}">{{ $hotel->name }}</a>
+               href="{{ route('hotels.show', ['id' => $hotel->id]) }}">{{ $hotel->name }}</a>
             <div class="text-xs">
                 {{ $hotel->address }}
             </div>
@@ -22,7 +22,7 @@
             </div>
         @endif
         <div class="flex justify-end">
-            <x-link-button href="{{ route('hotels.show', ['hotel' => $hotel]) }}">Подробнее</x-link-button>
+            <x-link-button href="{{ route('hotels.show', ['id' => $hotel->id]) }}">Подробнее</x-link-button>
         </div>
     </div>
 </div>

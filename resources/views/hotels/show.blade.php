@@ -12,7 +12,9 @@
             <div class="w-full md:w-2/3 px-4">
                 <div class="text-2xl font-bold">{{ $hotel->name }}</div>
                 <div class="flex items-center">
-                    <x-gmdi-pin-drop-o class="w-5 h-5 mr-1 text-blue-700"/>
+                    <svg class="w-5 h-5 mr-1 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21s-8-4.5-8-11a8 8 0 1 1 16 0c0 6.5-8 11-8 11zm0 0V10m0 0s0 0 0 0V3h0h0"></path>
+                    </svg>
                     {{ $hotel->address }}
                 </div>
                 <div>{{ $hotel->description }}</div>

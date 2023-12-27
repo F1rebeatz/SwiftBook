@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\BookingController;
+use TCG\Voyager\Facades\Voyager;
+use App\Http\Controllers\HotelController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +20,22 @@ Route::get('/', function () {
     return view('index');
 })->name('index');
 
-Route::get('hotels', [App\Http\Controllers\HotelController::class, 'index'])->name('hotels.index');
+Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
+Route::get('/hotels/{id}', [HotelController::class, 'show'])->name('hotels.show');
+Route::post('/hotels/book', [HotelController::class, 'book'])->name('bookings.store');
+
+Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+
+
 
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
+//    Route::group(['as' => 'voyager.'], function () {
+//        // Добавьте пользовательские маршруты аутентификации и регистрации, если необходимо
+//        Route::get('login', [CustomVoyagerAuthController::class, 'login'])->name('login');
+//        Route::post('login', [CustomVoyagerAuthController::class, 'postLogin'])->name('postlogin');
+//
+//        Route::get('register', [CustomVoyagerAuthController::class, 'register'])->name('register');
+//        Route::post('register', [CustomVoyagerAuthController::class, 'postRegister'])->name('postregister');
+//    });
 });
