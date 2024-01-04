@@ -23,7 +23,7 @@
                 <span class="text-lg font-bold">{{ $room->total_price }} руб.</span>
                 <span>за {{ $room->total_days }} ночей</span>
             </div>
-            <form class="ml-4" method="POST" action="{{ route('bookings.store') }}">
+            <form class="ml-4" method="POST" action="{{ route('bookings.store', ['id' => $room->hotel_id])}}">
                 @csrf
                 <input type="hidden" name="started_at" value="{{ request()->get('start_date', \Carbon\Carbon::now()->format('d-m-Y')) }}">
                 <input type="hidden" name="finished_at" value="{{ request()->get('end_date', \Carbon\Carbon::now()->format('d-m-Y')) }}">

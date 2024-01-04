@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Hotel extends Model
@@ -12,9 +13,9 @@ class Hotel extends Model
     protected $table = 'hotels';
     protected $fillable = ['title','description','poster_url','address'];
 
-    public function facilities(): HasMany
+    public function facilities(): BelongsToMany
     {
-        return $this->hasMany(FacilityHotel::class);
+        return $this->belongsToMany(Facility::class, 'facility_hotel', 'hotel_id', 'facility_id');
     }
 
     public function rooms(): HasMany {

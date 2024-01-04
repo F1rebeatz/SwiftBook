@@ -9,7 +9,7 @@
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-        @vite('resources/js/app.js')
+        @vite(['resources/js/app.js', 'resources/css/app.css'])
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">
