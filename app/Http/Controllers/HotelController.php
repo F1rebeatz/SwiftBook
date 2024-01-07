@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Models\Hotel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
@@ -20,11 +21,22 @@ class HotelController extends Controller
         return view('hotels.index', compact('hotels'));
     }
 
-    public function show($id) {
+    public function show(Request $request, $id)
+    {
         $hotel = Hotel::find($id);
         $rooms = $hotel->rooms;
-        return view('hotels.show', compact('hotel', 'rooms'));
+
+        $startDate = $request->input('start_date', now()->format('Y-m-d'));
+        $endDate = $request->input('end_date', now()->addDay()->format('Y-m-d'));
+
+        foreach ($rooms as $room) {
+            $room->total_price = $room->price * $room->calculateDays($startDate, $endDate);
+            $room->total_days = $room->calculateDays($startDate, $endDate);
+        }
+
+        return view('hotels.show', compact('hotel', 'rooms', 'startDate', 'endDate'));
     }
+
 
     public function book(Request $request, $id) {
         $request->validate([
@@ -38,14 +50,15 @@ class HotelController extends Controller
         }
 
         $booking = new Booking([
-            'started_at' => $request->input('started_at'),
-            'finished_at' => $request->input('finished_at'),
+            'started_at' => Carbon::createFromFormat('Y-m-d', $request->input('started_at')),
+            'finished_at' => Carbon::createFromFormat('Y-m-d', $request->input('finished_at')),
             'hotel_id' => $hotel->id,
             'user_id' => auth()->user()->id,
             'room_id' => $request->input('room_id'),
             'price' => $request->input('price'),
             'days' => $request->input('days'),
         ]);
+
 
         $booking->save();
 

@@ -20,8 +20,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
-Auth::routes();
-
 Route::group(['prefix' => 'admin'], function () {
     Voyager::routes();
 });
@@ -29,7 +27,14 @@ Route::group(['prefix' => 'admin'], function () {
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
 Route::get('/hotels/{id}', [HotelController::class, 'show'])->name('hotels.show');
 Route::post('/hotels/book', [HotelController::class, 'book'])->name('bookings.store');
+
 Route::post('/hotels/{id}/book', [HotelController::class, 'book'])->name('bookings.store');
 
 Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+Route::get('/bookings/show/{booking}', [BookingController::class, 'show'])->name('bookings.show');
 
+
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
