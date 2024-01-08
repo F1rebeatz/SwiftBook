@@ -5,5 +5,8 @@
                 <x-hotels.hotel-card :hotel="$hotel"></x-hotels.hotel-card>
             @endforeach
         </div>
+        <div class="mt-8">
+            {{ $hotels->links() }}
+        </div>
     </div>
 </x-app-layout>
