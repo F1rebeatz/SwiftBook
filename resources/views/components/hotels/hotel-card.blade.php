@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col justify-between p-4">
         <div>
             <a class="block text-grey-darkest mb-2 font-bold"
-               href="{{ route('hotels.show', ['id' => $hotel->id]) }}">{{ $hotel->name }}</a>
+               href="{{ route('hotels.show', ['id' => $hotel->id]) }}">{{ $hotel->title }}</a>
             <div class="text-xs">
                 {{ $hotel->address }}
             </div>

@@ -19,7 +19,7 @@
             <div
                 class="md:flex-row flex-col flex justify-between items-start w-full md:w-3/5 pb-8 space-y-4 md:space-y-0">
                 <div class="w-full flex flex-col justify-start items-start space-y-8">
-                    <h3 class="text-xl xl:text-2xl font-semibold leading-6 text-gray-800">{{ $booking->room->name }}</h3>
+                    <h3 class="text-xl xl:text-2xl font-semibold leading-6 text-gray-800"> {{ $booking->room->title }}</h3>
                     <div class="flex justify-start items-start flex-col space-y-2">
                         <p class="text-sm leading-none text-gray-800"><span>Даты: </span>
                             {{ \Carbon\Carbon::parse($booking->started_at)->format('d.m.Y') }}

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\HotelFilter;
+use App\Http\Requests\HotelRequest;
 use App\Models\Booking;
 use App\Models\Hotel;
 use Carbon\Carbon;
@@ -15,11 +17,15 @@ class HotelController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(HotelRequest $request)
     {
-        $hotels = Hotel::paginate(10);
+        $data = $request->validated();
+
+        $filter = app()->make(HotelFilter::class, ['queryParams' => array_filter($data)]);
+        $hotels = Hotel::filter($filter)->paginate(10);
         return view('hotels.index', compact('hotels'));
     }
+
 
     public function show(Request $request, $id)
     {
