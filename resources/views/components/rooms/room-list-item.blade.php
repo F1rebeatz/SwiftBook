@@ -8,6 +8,10 @@
             <div class="text-xl font-bold">
                 {{ $room->title }}
             </div>
+            <div class="pt-2">
+                <span class="text-2xl text-grey-darkest">{{ $room->price }}₽</span>
+                <span class="text-lg"> за ночь</span>
+            </div>
             <div>
                <span>{{__('Этаж')}}</span> {{ $room->floor_area }} м
             </div>

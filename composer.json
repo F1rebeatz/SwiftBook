@@ -9,6 +9,7 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "10.10.0",
         "laravel/sanctum": "3.3.0",
+        "laravel/scout": "^10.7",
         "laravel/tinker": "2.8.0",
         "tcg/voyager": "1.7.0"
     },

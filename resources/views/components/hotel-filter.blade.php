@@ -1,24 +1,28 @@
+@props(['facilities', 'selectedFacilities'])
+
 <div>
     <form action="{{ route('hotels.index') }}" method="get" class="mb-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div class="mb-4">
-                <label for="title" class="block text-sm font-medium text-gray-700">Title:</label>
-                <input type="text" name="title" id="title" value="{{ request()->input('title') }}" class="mt-1 p-2 border rounded-md w-full">
-            </div>
-
-            <div class="mb-4">
-                <label for="description" class="block text-sm font-medium text-gray-700">Description:</label>
-                <input type="text" name="description" id="description" value="{{ request()->input('description') }}" class="mt-1 p-2 border rounded-md w-full">
-            </div>
-
-            <div class="mb-4">
-                <label for="address" class="block text-sm font-medium text-gray-700">Address:</label>
-                <input type="text" name="address" id="address" value="{{ request()->input('address') }}" class="mt-1 p-2 border rounded-md w-full">
+        <div class="mb-4">
+            <label for="search" class="block text-sm font-medium text-gray-700">{{ __('Search for a hotel by name, description, address:') }}</label>
+            <div class="flex items-center">
+                <input type="text" name="search" id="search" value="{{ request('search') }}" class="mt-1 p-2 border rounded-md w-full">
+                <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Search
+                </button>
             </div>
         </div>
-
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600">
-            Filter
-        </button>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">{{ __('Facilities:') }}</label>
+            <div class="mt-2 space-y-2">
+                @if(isset($facilities) && $facilities->isNotEmpty())
+                    @foreach($facilities as $facility)
+                        <div class="flex items-center">
+                            <input type="checkbox" name="facilities[]" value="{{ $facility->id }}" {{ in_array($facility->id, $selectedFacilities) ? 'checked' : '' }} class="mr-2">
+                            <span class="text-sm">{{ $facility->title }}</span>
+                        </div>
+                    @endforeach
+                @endif
+            </div>
+        </div>
     </form>
 </div>

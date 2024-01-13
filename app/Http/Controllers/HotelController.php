@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Filters\HotelFilter;
 use App\Http\Requests\HotelRequest;
 use App\Models\Booking;
+use App\Models\Facility;
 use App\Models\Hotel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -19,13 +19,32 @@ class HotelController extends Controller
 
     public function index(HotelRequest $request)
     {
-        $data = $request->validated();
+        $searchQuery = $request->input('search');
+        $selectedFacilities = $request->input('facilities', []);
+        $facilities = Facility::all();
 
-        $filter = app()->make(HotelFilter::class, ['queryParams' => array_filter($data)]);
-        $hotels = Hotel::filter($filter)->paginate(10);
-        return view('hotels.index', compact('hotels'));
+        $query = Hotel::query();
+
+        if ($searchQuery) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'like', "%$searchQuery%")
+                    ->orWhere('description', 'like', "%$searchQuery%")
+                    ->orWhere('address', 'like', "%$searchQuery%");
+            });
+        }
+
+        if (!empty($selectedFacilities)) {
+            $query->whereHas('facilities', function ($q) use ($selectedFacilities) {
+               foreach ($selectedFacilities as $facilityId) {
+                   $q->where('facility_id', $facilityId);
+               }
+            }, '=', count($selectedFacilities));
+        }
+
+        $hotels = $query->paginate(10);
+
+        return view('hotels.index', compact('hotels', 'facilities', 'selectedFacilities'));
     }
-
 
     public function show(Request $request, $id)
     {
