@@ -19,5 +19,7 @@
     "Remember me": "Запомнить меня",
     "Register": "Зарегистрироваться",
     "Confirm Password": "Повторите пароль",
-    "Search": "Поиск отеля по названию, описанию, адресу"
+    "Search for a hotel by name or address:": "Поиск отеля по названию или адресу:",
+    "Search": "Поиск",
+    "Facilities:": "Удобства:"
 }

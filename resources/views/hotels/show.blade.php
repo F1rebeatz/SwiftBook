@@ -4,7 +4,9 @@
 @endphp
 
 <x-app-layout>
+
     <div class="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
+
         <div class="flex flex-wrap mb-12">
             <div class="w-full flex justify-start md:w-1/3 mb-8 md:mb-0">
                 <img class="h-full rounded-l-sm" src="{{ $hotel->poster_url }}" alt="Room Image">
@@ -20,29 +22,40 @@
                 <div>{{ $hotel->description }}</div>
             </div>
         </div>
+
         <div class="flex flex-col">
             <div class="text-2xl text-center md:text-start font-bold">Забронировать комнату</div>
 
-            <form method="get" action="{{ url()->current() }}">
-                <div class="flex my-6">
-                    <div class="flex items-center mr-5">
+            <form method="get" action="{{ url()->current() }}" class="my-6">
+                <div class="flex items-center space-x-5">
+                    <div class="flex items-center space-x-4">
                         <div class="relative">
                             <input name="start_date" min="{{ date('Y-m-d') }}" value="{{ $startDate }}"
                                    placeholder="Дата заезда" type="date"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5">
                         </div>
-                        <span class="mx-4 text-gray-500">по</span>
+                        <span class="text-gray-500">по</span>
                         <div class="relative">
                             <input name="end_date" type="date" min="{{ date('Y-m-d') }}" value="{{ $endDate }}"
                                    placeholder="Дата выезда"
                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5">
                         </div>
                     </div>
+
+                    <div class="flex items-center space-x-4">
+                        <span class="mr-2">Сортировать по:</span>
+                        <select name="sort_by" class="border border-gray-300 rounded-lg p-2">
+                            <option value="price_asc" {{$sortBy === "price_asc" ? 'checked' : '' }}>Цена по возрастанию</option>
+                            <option value="price_desc" {{$sortBy === "price_desc" ? 'checked' : '' }}>Цена по убыванию</option>
+                        </select>
+                    </div>
+
                     <div>
-                        <x-the-button type="submit" class=" h-full w-full">Загрузить номера</x-the-button>
+                        <x-the-button type="submit" class="h-full w-full">Загрузить номера</x-the-button>
                     </div>
                 </div>
             </form>
+
             @if($startDate && $endDate)
                 <div class="flex flex-col w-full lg:w-4/5">
                     @foreach($rooms as $room)

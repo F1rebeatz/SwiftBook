@@ -8,6 +8,8 @@ use App\Models\Facility;
 use App\Models\Hotel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
 
 class HotelController extends Controller
 {
@@ -23,28 +25,35 @@ class HotelController extends Controller
         $selectedFacilities = $request->input('facilities', []);
         $facilities = Facility::all();
 
-        $query = Hotel::query();
+        $query = Hotel::with('facilities');
 
-        if ($searchQuery) {
-            $query->where(function ($q) use ($searchQuery) {
-                $q->where('title', 'like', "%$searchQuery%")
-                    ->orWhere('description', 'like', "%$searchQuery%")
-                    ->orWhere('address', 'like', "%$searchQuery%");
-            });
-        }
-
-        if (!empty($selectedFacilities)) {
-            $query->whereHas('facilities', function ($q) use ($selectedFacilities) {
-               foreach ($selectedFacilities as $facilityId) {
-                   $q->where('facility_id', $facilityId);
-               }
-            }, '=', count($selectedFacilities));
-        }
+        $this->applySearchQuery($query, $searchQuery);
+        $this->applyFacilitiesFilter($query, $selectedFacilities);
 
         $hotels = $query->paginate(10);
 
         return view('hotels.index', compact('hotels', 'facilities', 'selectedFacilities'));
     }
+
+    protected function applySearchQuery($query, $searchQuery)
+    {
+        if ($searchQuery) {
+            $query->where(function ($q) use ($searchQuery) {
+                $q->where('title', 'like', "%$searchQuery%")
+                    ->orWhere('address', 'like', "%$searchQuery%");
+            });
+        }
+    }
+
+    protected function applyFacilitiesFilter($query, $selectedFacilities)
+    {
+        if (!empty($selectedFacilities)) {
+            $query->whereHas('facilities', function ($q) use ($selectedFacilities) {
+                $q->whereIn('facility_id', $selectedFacilities);
+            }, '=', count($selectedFacilities));
+        }
+    }
+
 
     public function show(Request $request, $id)
     {
@@ -53,13 +62,21 @@ class HotelController extends Controller
 
         $startDate = $request->input('start_date', now()->format('Y-m-d'));
         $endDate = $request->input('end_date', now()->addDay()->format('Y-m-d'));
+        $sortBy = $request->input('sort_by');
+
+
+        if ($sortBy === 'price_asc') {
+            $rooms = $rooms->sortBy('price');
+        } elseif ($sortBy === 'price_desc') {
+            $rooms = $rooms->sortByDesc('price');
+        }
 
         foreach ($rooms as $room) {
             $room->total_price = $room->price * $room->calculateDays($startDate, $endDate);
             $room->total_days = $room->calculateDays($startDate, $endDate);
         }
 
-        return view('hotels.show', compact('hotel', 'rooms', 'startDate', 'endDate'));
+        return view('hotels.show', compact('hotel', 'rooms', 'startDate', 'endDate', 'sortBy'));
     }
 
 

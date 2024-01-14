@@ -27,14 +27,4 @@ class Hotel extends Model
     {
         return $this->hasMany(Room::class);
     }
-
-    #[SearchUsingPrefix(['title', 'description', 'address'])]
-    public function toSearchableArray(): array
-    {
-        return [
-            'title' => $this->title,
-            'description' => $this->description,
-            'address' => $this->address,
-        ];
-    }
 }
