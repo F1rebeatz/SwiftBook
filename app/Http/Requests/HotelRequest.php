@@ -23,9 +23,8 @@ class HotelRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string',
-            'description' => 'nullable|string',
-            'address' => 'nullable|string',
+            'search' => 'nullable|string',
+            'facilities' => 'nullable|array'
         ];
     }
 }

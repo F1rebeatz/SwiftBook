@@ -10,7 +10,7 @@
                 @endforeach
             </div>
             <div class="mt-8">
-                {{ $hotels->links() }}
+                {{ $hotels->withQueryString()->links() }}
             </div>
         </div>
     </div>

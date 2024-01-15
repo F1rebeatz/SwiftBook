@@ -3,20 +3,21 @@
 namespace App\Models;
 
 
+use App\Models\Traits\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Laravel\Scout\Searchable;
-use Laravel\Scout\Attributes\SearchUsingPrefix;
-use Laravel\Scout\Attributes\SearchUsingFullText;
+
+
 class Hotel extends Model
 {
     use HasFactory;
-    use Searchable;
+    use Filterable;
 
     protected $table = 'hotels';
     protected $fillable = ['title', 'description', 'poster_url', 'address'];
+
 
     public function facilities(): BelongsToMany
     {

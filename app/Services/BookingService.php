@@ -13,7 +13,7 @@ class BookingService
         $hotel = Hotel::find($hotelId);
 
         if (!$hotel) {
-            return ['error' => 'Hotel not found.'];
+            return ['error' => 'HotelFilter not found.'];
         }
 
         $booking = new Booking([

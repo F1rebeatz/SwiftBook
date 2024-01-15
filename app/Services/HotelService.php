@@ -9,35 +9,6 @@ use Illuminate\Support\Collection;
 
 class HotelService
 {
-    public function searchAndFilter(?string $searchQuery, array $selectedFacilities): LengthAwarePaginator
-    {
-        $query = Hotel::with('facilities');
-
-        $this->applySearchQuery($query, $searchQuery);
-        $this->applyFacilitiesFilter($query, $selectedFacilities);
-
-        return $query->paginate(10);
-    }
-
-    protected function applySearchQuery(Builder $query, ?string $searchQuery): void
-    {
-        if ($searchQuery) {
-            $query->where(function ($q) use ($searchQuery) {
-                $q->where('title', 'like', "%$searchQuery%")
-                    ->orWhere('address', 'like', "%$searchQuery%");
-            });
-        }
-    }
-
-    protected function applyFacilitiesFilter(Builder $query, array $selectedFacilities): void
-    {
-        if (!empty($selectedFacilities)) {
-            $query->whereHas('facilities', function ($q) use ($selectedFacilities) {
-                $q->whereIn('facility_id', $selectedFacilities);
-            }, '=', count($selectedFacilities));
-        }
-    }
-
     public function display(int $id, array $queryParams): array
     {
         $hotel = Hotel::find($id);

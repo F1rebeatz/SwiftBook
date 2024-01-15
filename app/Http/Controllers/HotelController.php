@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Filters\HotelFilter;
 use App\Http\Requests\HotelRequest;
-use App\Models\Booking;
 use App\Models\Facility;
 use App\Models\Hotel;
 use App\Services\BookingService;
 use App\Services\HotelService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class HotelController extends Controller
@@ -24,11 +23,14 @@ class HotelController extends Controller
 
     public function index(HotelRequest $request)
     {
-        $searchQuery = $request->input('search');
         $selectedFacilities = $request->input('facilities', []);
+        $data = $request->validated();
+
         $facilities = Facility::all();
 
-        $hotels = $this->hotelService->searchAndFilter($searchQuery, $selectedFacilities);
+        $filter = app()->make(HotelFilter::class, ['queryParams' => $data]);
+
+        $hotels =  Hotel::with('facilities')->filter($filter)->paginate(10);
 
         return view('hotels.index', compact('hotels', 'facilities', 'selectedFacilities'));
     }
