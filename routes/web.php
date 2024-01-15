@@ -31,6 +31,7 @@ Route::post('/hotels/book', [HotelController::class, 'book'])->name('bookings.st
 Route::post('/hotels/{id}/book', [HotelController::class, 'book'])->name('bookings.store');
 
 Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+Route::delete('/bookings/{booking}', [BookingController::class, 'remove'])->name('bookings.delete');
 Route::get('/bookings/show/{booking}', [BookingController::class, 'show'])->name('bookings.show');
 
 

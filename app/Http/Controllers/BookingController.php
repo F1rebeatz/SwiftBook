@@ -30,5 +30,11 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking', 'room', 'hotel'));
     }
 
+    public function remove($id)
+    {
+        $booking = Booking::find($id);
+        $booking->delete();
+        return redirect()->route('bookings.index');
+    }
 
 }

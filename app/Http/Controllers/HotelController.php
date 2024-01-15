@@ -6,16 +6,19 @@ use App\Http\Requests\HotelRequest;
 use App\Models\Booking;
 use App\Models\Facility;
 use App\Models\Hotel;
+use App\Services\BookingService;
+use App\Services\HotelService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Pagination\Paginator;
 
 class HotelController extends Controller
 {
-
-    public function __construct()
+    protected HotelService $hotelService;
+    protected BookingService $bookingService;
+    public function __construct(HotelService $hotelService, BookingService $bookingService)
     {
+        $this->hotelService = $hotelService;
+        $this->bookingService = $bookingService;
         $this->middleware('auth');
     }
 
@@ -25,87 +28,27 @@ class HotelController extends Controller
         $selectedFacilities = $request->input('facilities', []);
         $facilities = Facility::all();
 
-        $query = Hotel::with('facilities');
-
-        $this->applySearchQuery($query, $searchQuery);
-        $this->applyFacilitiesFilter($query, $selectedFacilities);
-
-        $hotels = $query->paginate(10);
+        $hotels = $this->hotelService->searchAndFilter($searchQuery, $selectedFacilities);
 
         return view('hotels.index', compact('hotels', 'facilities', 'selectedFacilities'));
     }
 
-    protected function applySearchQuery($query, $searchQuery)
-    {
-        if ($searchQuery) {
-            $query->where(function ($q) use ($searchQuery) {
-                $q->where('title', 'like', "%$searchQuery%")
-                    ->orWhere('address', 'like', "%$searchQuery%");
-            });
-        }
-    }
-
-    protected function applyFacilitiesFilter($query, $selectedFacilities)
-    {
-        if (!empty($selectedFacilities)) {
-            $query->whereHas('facilities', function ($q) use ($selectedFacilities) {
-                $q->whereIn('facility_id', $selectedFacilities);
-            }, '=', count($selectedFacilities));
-        }
-    }
-
-
     public function show(Request $request, $id)
     {
-        $hotel = Hotel::find($id);
-        $rooms = $hotel->rooms;
-
-        $startDate = $request->input('start_date', now()->format('Y-m-d'));
-        $endDate = $request->input('end_date', now()->addDay()->format('Y-m-d'));
-        $sortBy = $request->input('sort_by');
-
-
-        if ($sortBy === 'price_asc') {
-            $rooms = $rooms->sortBy('price');
-        } elseif ($sortBy === 'price_desc') {
-            $rooms = $rooms->sortByDesc('price');
-        }
-
-        foreach ($rooms as $room) {
-            $room->total_price = $room->price * $room->calculateDays($startDate, $endDate);
-            $room->total_days = $room->calculateDays($startDate, $endDate);
-        }
-
-        return view('hotels.show', compact('hotel', 'rooms', 'startDate', 'endDate', 'sortBy'));
+        $queryParams = $request->all();
+        $data = $this->hotelService->display($id, $queryParams);
+        return view('hotels.show', $data);
     }
 
+    public function book(Request $request, $id)
+    {
+        $requestData = $request->all();
+        $result = $this->bookingService->book($id, $requestData);
 
-    public function book(Request $request, $id) {
-        $request->validate([
-            'started_at' => 'required|date',
-            'finished_at' => 'required|date|after:start_date',
-        ]);
-        $hotel = Hotel::find($id);
-
-        if (!$hotel) {
-            return redirect()->back()->with('error', 'Hotel not found.');
+        if (isset($result['error'])) {
+            return redirect()->back()->with('error', $result['error']);
         }
 
-        $booking = new Booking([
-            'started_at' => Carbon::createFromFormat('Y-m-d', $request->input('started_at')),
-            'finished_at' => Carbon::createFromFormat('Y-m-d', $request->input('finished_at')),
-            'hotel_id' => $hotel->id,
-            'user_id' => auth()->user()->id,
-            'room_id' => $request->input('room_id'),
-            'price' => $request->input('price'),
-            'days' => $request->input('days'),
-        ]);
-
-
-        $booking->save();
-
-        return redirect()->back()->with('success', 'Booking created successfully.');
+        return redirect()->back()->with('success', $result['success']);
     }
-
-
 }
