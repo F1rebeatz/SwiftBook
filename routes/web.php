@@ -26,8 +26,6 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
 Route::get('/hotels/{id}', [HotelController::class, 'show'])->name('hotels.show');
-Route::post('/hotels/book', [HotelController::class, 'book'])->name('bookings.store');
-
 Route::post('/hotels/{id}/book', [HotelController::class, 'book'])->name('bookings.store');
 
 Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');

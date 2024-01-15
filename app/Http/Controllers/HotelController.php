@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Filters\HotelFilter;
 use App\Http\Requests\HotelRequest;
+use App\Mail\BookingConfirmation;
 use App\Models\Facility;
 use App\Models\Hotel;
 use App\Services\BookingService;
 use App\Services\HotelService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class HotelController extends Controller
 {
@@ -45,12 +47,14 @@ class HotelController extends Controller
     public function book(Request $request, $id)
     {
         $requestData = $request->all();
-        $result = $this->bookingService->book($id, $requestData);
+        $booking = $this->bookingService->book($id, $requestData);
 
-        if (isset($result['error'])) {
-            return redirect()->back()->with('error', $result['error']);
+        if (isset($booking['error'])) {
+            return redirect()->back()->with('error', $booking['error']);
         }
 
-        return redirect()->back()->with('success', $result['success']);
+        Mail::to(auth()->user()->email)->send(new BookingConfirmation($booking));
+
+        return redirect()->back();
     }
 }
