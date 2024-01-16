@@ -26,7 +26,7 @@ Route::group(['prefix' => 'admin'], function () {
 
 Route::get('/hotels', [HotelController::class, 'index'])->name('hotels.index');
 Route::get('/hotels/{id}', [HotelController::class, 'show'])->name('hotels.show');
-Route::post('/hotels/{id}/book', [HotelController::class, 'book'])->name('bookings.store');
+Route::post('/hotels/{id}/book', [BookingController::class, 'book'])->name('bookings.store');
 
 Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
 Route::delete('/bookings/{booking}', [BookingController::class, 'remove'])->name('bookings.delete');
