@@ -34,13 +34,12 @@ class BookingController extends Controller
 
         try {
             $booking = $this->bookingService->book($id, $requestData);
-            Mail::to(auth()->user()->email)->send(new BookingConfirmation($booking));
+//            Mail::to(auth()->user()->email)->send(new BookingConfirmation($booking));
             return redirect()->route('bookings.index')->with('success', 'Booking successful!');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
-
 
     public function show(Booking $booking)
     {

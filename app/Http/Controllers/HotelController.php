@@ -15,11 +15,9 @@ use Illuminate\Support\Facades\Mail;
 class HotelController extends Controller
 {
     protected HotelService $hotelService;
-    protected BookingService $bookingService;
-    public function __construct(HotelService $hotelService, BookingService $bookingService)
+    public function __construct(HotelService $hotelService)
     {
         $this->hotelService = $hotelService;
-        $this->bookingService = $bookingService;
         $this->middleware('auth');
     }
 
@@ -44,17 +42,4 @@ class HotelController extends Controller
         return view('hotels.show', $data);
     }
 
-    public function book(Request $request, $id)
-    {
-        $requestData = $request->all();
-        $booking = $this->bookingService->book($id, $requestData);
-
-        if (isset($booking['error'])) {
-            return redirect()->back()->with('error', $booking['error']);
-        }
-
-        Mail::to(auth()->user()->email)->send(new BookingConfirmation($booking));
-
-        return redirect()->back();
-    }
 }

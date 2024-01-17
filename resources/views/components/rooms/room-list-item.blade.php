@@ -31,7 +31,7 @@
             <form class="ml-4" method="POST" action="{{ route('bookings.store', ['id' => $room->hotel_id])}}">
                 @csrf
                 <input type="hidden" name="started_at" value="{{ request()->get('start_date', \Carbon\Carbon::now()->format('Y-m-d')) }}">
-                <input type="hidden" name="finished_at" value="{{ request()->get('end_date', \Carbon\Carbon::now()->format('Y-m-d')) }}">
+                <input type="hidden" name="finished_at" value="{{ request()->get('end_date', \Carbon\Carbon::now()->addDay()->format('Y-m-d')) }}">
                 <input type="hidden" name="room_id" value="{{ $room->id }}">
                 <input type="hidden" name="price" value="{{$room->total_price}}">
                 <input type="hidden" name="days" value="{{$room->total_days}}">
