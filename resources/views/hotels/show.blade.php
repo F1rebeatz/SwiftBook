@@ -1,12 +1,16 @@
 @php
-    $startDate = request()->get('start_date', \Carbon\Carbon::now()->format('Y-m-d'));
-    $endDate = request()->get('end_date', \Carbon\Carbon::now()->addDay()->format('Y-m-d'));
+    $startDate = request()->get('start_date', now()->format('Y-m-d'));
+    $endDate = request()->get('end_date', now()->addDay()->format('Y-m-d'));
+
 @endphp
 
 <x-app-layout>
-
+    @if($message = Session::get('success'))
+        <x-success-alert :message="$message" />
+    @elseif($message = Session::get('error'))
+        <x-error-alert :message="$message" />
+    @endif
     <div class="py-14 px-4 md:px-6 2xl:px-20 2xl:container 2xl:mx-auto">
-
         <div class="flex flex-wrap mb-12">
             <div class="w-full flex justify-start md:w-1/3 mb-8 md:mb-0">
                 <img class="h-full rounded-l-sm" src="{{ $hotel->poster_url }}" alt="Room Image">
@@ -26,7 +30,7 @@
         <div class="flex flex-col">
             <div class="text-2xl text-center md:text-start font-bold">Забронировать комнату</div>
 
-            <form method="get" action="{{ url()->current() }}" class="my-6">
+            <form method="get" action="{{ route('hotels.show', ['id' => $hotel->id]) }}" class="my-6">
                 <div class="flex items-center space-x-5">
                     <div class="flex items-center space-x-4">
                         <div class="relative">
@@ -45,8 +49,8 @@
                     <div class="flex items-center space-x-4">
                         <span class="mr-2">Сортировать по:</span>
                         <select name="sort_by" class="border border-gray-300 rounded-lg p-2">
-                            <option value="price_asc" {{$sortBy === "price_asc" ? 'checked' : '' }}>Цена по возрастанию</option>
-                            <option value="price_desc" {{$sortBy === "price_desc" ? 'checked' : '' }}>Цена по убыванию</option>
+                            <option value="price_asc" {{ $sortBy === "price_asc" ? 'selected' : '' }}>Цена по возрастанию</option>
+                            <option value="price_desc" {{ $sortBy === "price_desc" ? 'selected' : '' }}>Цена по убыванию</option>
                         </select>
                     </div>
 

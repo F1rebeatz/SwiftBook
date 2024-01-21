@@ -4,27 +4,33 @@ namespace App\Services;
 
 use App\Models\Booking;
 use App\Models\Hotel;
-use App\Models\Traits\RoomAvailability;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\RedirectResponse;
 
 
 class BookingService
 {
-    use RoomAvailability;
-    public function book(int $hotelId, array $requestData): Booking
+    public function book(int $hotelId, array $requestData): Booking|RedirectResponse
     {
         try {
-            $hotel = Hotel::findOrFail($hotelId);
-
             $startDate = Carbon::createFromFormat('Y-m-d', $requestData['started_at']);
             $endDate = Carbon::createFromFormat('Y-m-d', $requestData['finished_at']);
+
+            if ($startDate === false || $endDate === false) {
+                throw new \Exception('Invalid date format.');
+            }
+
+            if ($endDate->diffInDays($startDate) <= 0) {
+                throw new \Exception('Invalid booking duration.');
+            }
+
+            $hotel = Hotel::findOrFail($hotelId);
 
             if (!$this->isRoomAvailable($requestData['room_id'], $startDate, $endDate)) {
                 throw new \Exception('The room is not available for the selected dates.');
             }
 
-            $booking = Booking::create([
+            return Booking::create([
                 'started_at' => $startDate,
                 'finished_at' => $endDate,
                 'hotel_id' => $hotel->id,
@@ -33,11 +39,18 @@ class BookingService
                 'price' => $requestData['price'],
                 'days' => $requestData['days'],
             ]);
-
-            return $booking;
-        } catch (ModelNotFoundException $exception) {
-            throw new \Exception('Hotel not found.');
+        } catch (\Exception $exception) {
+            return redirect()->back()->with('error', $exception->getMessage());
         }
+    }
+
+
+    private function isRoomAvailable(int $roomId, Carbon $startDate, Carbon $endDate): bool
+    {
+        return !Booking::where('room_id', $roomId)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->where('started_at', '<=', $endDate)->where('finished_at', '>=', $startDate);
+            })->exists();
     }
 
 }

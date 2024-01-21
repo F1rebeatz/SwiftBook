@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BookingRequest;
 use App\Mail\BookingConfirmation;
 use App\Models\Booking;
 use App\Models\Hotel;
 use App\Models\Room;
 use App\Services\BookingService;
 use App\Services\HotelService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class BookingController extends Controller
 {
@@ -21,34 +24,34 @@ class BookingController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index():View
     {
         $user = Auth::user();
         $bookings = Booking::with(['room'])->where('user_id', $user->id)->get();
         return view('bookings.index', compact('bookings'));
     }
 
-    public function book(Request $request, $id)
-    {
-        $requestData = $request->all();
 
+    public function book(BookingRequest $request, int $id):RedirectResponse
+    {
+        $requestData = $request->validated();
         try {
             $booking = $this->bookingService->book($id, $requestData);
-//            Mail::to(auth()->user()->email)->send(new BookingConfirmation($booking));
-            return redirect()->route('bookings.index')->with('success', 'Booking successful!');
+            // Mail::to(auth()->user()->email)->send(new BookingConfirmation($booking));
+            return redirect()->back()->with('success', 'Booking successful!');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
         }
     }
 
-    public function show(Booking $booking)
+    public function show(Booking $booking):View
     {
         $room = $booking->room;
         $hotel = $booking->room->hotel;
         return view('bookings.show', compact('booking', 'room', 'hotel'));
     }
 
-    public function remove($id)
+    public function remove(int $id):RedirectResponse
     {
         $booking = Booking::find($id);
         $booking->delete();

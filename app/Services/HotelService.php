@@ -4,13 +4,11 @@ namespace App\Services;
 
 use App\Models\Booking;
 use App\Models\Hotel;
-use App\Models\Traits\RoomAvailability;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 
 class HotelService
 {
-    use RoomAvailability;
     public function display(int $id, array $queryParams): array
     {
         $hotel = Hotel::find($id);
@@ -39,10 +37,19 @@ class HotelService
     {
         $startDate = Carbon::parse($startDate);
         $endDate = Carbon::parse($endDate);
-        return $hotel->rooms->load('facilities')->filter(function ($room) use ($startDate, $endDate) {
-            return $this->isRoomAvailable($room->id, $startDate, $endDate);
-        });
+
+        $roomIds = $hotel->rooms->pluck('id')->toArray();
+
+        $bookedRoomIds = Booking::whereIn('room_id', $roomIds)
+            ->where(function ($query) use ($startDate, $endDate) {
+                $query->where('started_at', '<=', $endDate)->where('finished_at', '>=', $startDate);
+            })
+            ->pluck('room_id')
+            ->toArray();
+
+        return $hotel->rooms->load('facilities')->whereIn('id', array_diff($roomIds, $bookedRoomIds));
     }
+
 }
 
 

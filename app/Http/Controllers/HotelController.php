@@ -11,6 +11,7 @@ use App\Services\BookingService;
 use App\Services\HotelService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class HotelController extends Controller
 {
@@ -35,7 +36,7 @@ class HotelController extends Controller
         return view('hotels.index', compact('hotels', 'facilities', 'selectedFacilities'));
     }
 
-    public function show(Request $request, $id)
+    public function show(Request $request, int $id):View
     {
         $queryParams = $request->all();
         $data = $this->hotelService->display($id, $queryParams);
