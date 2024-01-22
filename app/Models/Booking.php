@@ -29,4 +29,15 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function scopeManagerHotel($query)
+    {
+        if (auth()->user()?->hasRole('manager')) {
+            return $query->whereIn('room_id', Room::whereHas('hotel', function ($query) {
+                $query->whereIn('id', auth()->user()->managedHotels->pluck('id'));
+            })->pluck('id'));
+        }
+
+        return $query;
+    }
 }

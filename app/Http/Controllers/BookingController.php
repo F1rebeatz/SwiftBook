@@ -3,16 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BookingRequest;
-use App\Mail\BookingConfirmation;
 use App\Models\Booking;
-use App\Models\Hotel;
-use App\Models\Room;
 use App\Services\BookingService;
-use App\Services\HotelService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class BookingController extends Controller
@@ -31,13 +25,11 @@ class BookingController extends Controller
         return view('bookings.index', compact('bookings'));
     }
 
-
     public function book(BookingRequest $request, int $id):RedirectResponse
     {
         $requestData = $request->validated();
         try {
-            $booking = $this->bookingService->book($id, $requestData);
-            // Mail::to(auth()->user()->email)->send(new BookingConfirmation($booking));
+            $this->bookingService->book($id, $requestData);
             return redirect()->back()->with('success', 'Booking successful!');
         } catch (\Exception $exception) {
             return redirect()->back()->with('error', $exception->getMessage());
@@ -57,5 +49,4 @@ class BookingController extends Controller
         $booking->delete();
         return redirect()->route('bookings.index');
     }
-
 }

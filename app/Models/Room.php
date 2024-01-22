@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 class Room extends Model
 {
     use HasFactory;
+
     protected $table = 'rooms';
     protected $fillable = ['title', 'description', 'price', 'poster_url', 'hotel_id', 'floor_area', 'type'];
 
@@ -31,5 +32,14 @@ class Room extends Model
         $end = Carbon::createFromFormat('Y-m-d', $endDate);
 
         return $end->diffInDays($start);
+    }
+
+    public function scopeManagerHotel($query)
+    {
+        if (auth()->user()->hasRole('manager')) {
+            return $query->whereIn('hotel_id', auth()->user()->managedHotels->pluck('id'));
+        } else {
+            return $query;
+        }
     }
 }
