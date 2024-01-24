@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ReviewController;
 use Illuminate\Support\Facades\Auth;
 use TCG\Voyager\Facades\Voyager;
 use App\Http\Controllers\HotelController;
@@ -36,5 +37,8 @@ Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.ind
 Route::delete('/bookings/{booking}', [BookingController::class, 'remove'])->name('bookings.delete');
 Route::get('/bookings/show/{booking}', [BookingController::class, 'show'])->name('bookings.show');
 
-
-
+Route::get('/hotels/{id}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::post('/hotels/{id}/reviews', [ReviewController::class, 'store'])->name('reviews.store');
+Route::get('/hotels/{id}/reviews/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+Route::put('/hotels/{id}/reviews/edit', [ReviewController::class, 'update'])->name('reviews.update');
+Route::delete('hotels/{id}/reviews', [ReviewController::class, 'remove'])->name('reviews.destroy');

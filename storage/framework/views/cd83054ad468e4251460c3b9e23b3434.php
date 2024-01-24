@@ -54,13 +54,20 @@
             <div class="w-full md:w-2/3 px-4">
                 <div class="text-2xl font-bold"><?php echo e($hotel->title); ?></div>
                 <div class="flex items-center">
-                    <svg class="w-5 h-5 mr-1 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21s-8-4.5-8-11a8 8 0 1 1 16 0c0 6.5-8 11-8 11zm0 0V10m0 0s0 0 0 0V3h0h0"></path>
+                    <svg class="w-5 h-5 mr-1 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none"
+                         viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M12 21s-8-4.5-8-11a8 8 0 1 1 16 0c0 6.5-8 11-8 11zm0 0V10m0 0s0 0 0 0V3h0h0"></path>
                     </svg>
                     <?php echo e($hotel->address); ?>
 
                 </div>
-                <div><?php echo e($hotel->description); ?></div>
+                <div class="mb-3"><?php echo e($hotel->description); ?></div>
+                <div>
+                    <a href="<?php echo e(route('reviews.index', $hotel->id)); ?>" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full transition duration-300 ease-in-out">
+                        View Reviews
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -86,8 +93,12 @@
                     <div class="flex items-center space-x-4">
                         <span class="mr-2">Сортировать по:</span>
                         <select name="sort_by" class="border border-gray-300 rounded-lg p-2">
-                            <option value="price_asc" <?php echo e($sortBy === "price_asc" ? 'selected' : ''); ?>>Цена по возрастанию</option>
-                            <option value="price_desc" <?php echo e($sortBy === "price_desc" ? 'selected' : ''); ?>>Цена по убыванию</option>
+                            <option value="price_asc" <?php echo e($sortBy === "price_asc" ? 'selected' : ''); ?>>Цена по
+                                возрастанию
+                            </option>
+                            <option value="price_desc" <?php echo e($sortBy === "price_desc" ? 'selected' : ''); ?>>Цена по
+                                убыванию
+                            </option>
                         </select>
                     </div>
 
@@ -109,7 +120,6 @@
                     </div>
                 </div>
             </form>
-
             <?php if($startDate && $endDate): ?>
                 <div class="flex flex-col w-full lg:w-4/5">
                     <?php $__currentLoopData = $rooms; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $room): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
