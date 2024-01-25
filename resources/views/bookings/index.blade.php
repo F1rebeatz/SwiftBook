@@ -1,4 +1,9 @@
 <x-app-layout>
+    @if($message = Session::get('success'))
+        <x-success-alert :message="$message" />
+    @elseif($message = Session::get('error'))
+        <x-error-alert :message="$message" />
+    @endif
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden">

@@ -13,7 +13,7 @@
             <div class="p-6 bg-white border-b border-gray-200">
                 <h2 class="text-2xl font-semibold mb-4">Edit Review</h2>
 
-                <form action="<?php echo e(route('reviews.update', [$review->id, 'id' => $review->hotel_id])); ?>" method="POST">
+                <form action="<?php echo e(route('reviews.update', $review->id)); ?>" method="POST">
                     <?php echo csrf_field(); ?>
                     <?php echo method_field('PUT'); ?>
 

@@ -9,6 +9,11 @@ use Illuminate\Support\Collection;
 
 class HotelService
 {
+    /**
+     * @param int $id
+     * @param array $queryParams
+     * @return array
+     */
     public function display(int $id, array $queryParams): array
     {
         $hotel = Hotel::find($id);
@@ -33,6 +38,12 @@ class HotelService
         return compact('hotel', 'rooms', 'startDate', 'endDate', 'sortBy');
     }
 
+    /**
+     * @param Hotel $hotel
+     * @param string $startDate
+     * @param string $endDate
+     * @return Collection
+     */
     private function getAvailableRooms(Hotel $hotel, string $startDate, string $endDate): Collection
     {
         $startDate = Carbon::parse($startDate);
@@ -49,7 +60,6 @@ class HotelService
 
         return $hotel->rooms->load('facilities')->whereIn('id', array_diff($roomIds, $bookedRoomIds));
     }
-
 }
 
 

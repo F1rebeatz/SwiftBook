@@ -18,7 +18,7 @@ class HotelFilter extends AbstractFilter
         ];
     }
 
-    public function search(Builder $builder, $value): void
+    public function search(Builder $builder, array $value): void
     {
         $builder->where(function ($q) use ($value) {
             $q->where('title', 'like', "%$value%")
@@ -26,7 +26,7 @@ class HotelFilter extends AbstractFilter
         });
     }
 
-    public function facilities(Builder $builder, $value): void
+    public function facilities(Builder $builder, array $value): void
     {
         if (!empty($value)) {
             $builder->whereHas('facilities', function ($q) use ($value) {

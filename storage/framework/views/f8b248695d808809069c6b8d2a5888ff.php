@@ -14,7 +14,8 @@
             <div class="bg-white p-4 rounded shadow mb-4">
                 <p class="font-bold">User: <?php echo e($review->user->name); ?></p>
                 <p class="text-gray-600">Rating: <?php echo e($review->rating); ?></p>
-                <p class="mt-2"><?php echo e($review->comment); ?></p>
+                <p class="text-gray-600">Created at: <?php echo e($review->created_at->format('Y-m-d H:i:s')); ?></p>
+                <p class="mt-2 font-bold"><?php echo e($review->comment); ?></p>
 
                 <?php if(auth()->guard()->check()): ?>
                     <?php if(auth()->user()->id === $review->user->id): ?>

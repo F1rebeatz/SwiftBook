@@ -7,6 +7,39 @@
 <?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
 <?php endif; ?>
 <?php $component->withAttributes([]); ?>
+    <?php if($message = Session::get('success')): ?>
+        <?php if (isset($component)) { $__componentOriginal8c25e3da2645eb99478f0fc7d7cd0c77 = $component; } ?>
+<?php $component = App\View\Components\SuccessAlert::resolve(['message' => $message] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('success-alert'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\SuccessAlert::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal8c25e3da2645eb99478f0fc7d7cd0c77)): ?>
+<?php $component = $__componentOriginal8c25e3da2645eb99478f0fc7d7cd0c77; ?>
+<?php unset($__componentOriginal8c25e3da2645eb99478f0fc7d7cd0c77); ?>
+<?php endif; ?>
+    <?php elseif($message = Session::get('error')): ?>
+        <?php if (isset($component)) { $__componentOriginalb130abc79597b624a5cecf803e64ec72 = $component; } ?>
+<?php $component = App\View\Components\ErrorAlert::resolve(['message' => $message] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('error-alert'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(App\View\Components\ErrorAlert::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginalb130abc79597b624a5cecf803e64ec72)): ?>
+<?php $component = $__componentOriginalb130abc79597b624a5cecf803e64ec72; ?>
+<?php unset($__componentOriginalb130abc79597b624a5cecf803e64ec72); ?>
+<?php endif; ?>
+    <?php endif; ?>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="overflow-hidden">

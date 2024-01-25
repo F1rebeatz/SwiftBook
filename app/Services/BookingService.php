@@ -10,6 +10,11 @@ use Illuminate\Http\RedirectResponse;
 
 class BookingService
 {
+    /**
+     * @param int $hotelId
+     * @param array $requestData
+     * @return Booking|RedirectResponse
+     */
     public function book(int $hotelId, array $requestData): Booking|RedirectResponse
     {
         try {
@@ -45,6 +50,12 @@ class BookingService
     }
 
 
+    /**
+     * @param int $roomId
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return bool
+     */
     private function isRoomAvailable(int $roomId, Carbon $startDate, Carbon $endDate): bool
     {
         return !Booking::where('room_id', $roomId)

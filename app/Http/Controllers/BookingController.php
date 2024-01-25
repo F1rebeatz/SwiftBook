@@ -18,6 +18,9 @@ class BookingController extends Controller
         $this->middleware('auth');
     }
 
+    /**
+     * @return View
+     */
     public function index():View
     {
         $user = Auth::user();
@@ -25,6 +28,11 @@ class BookingController extends Controller
         return view('bookings.index', compact('bookings'));
     }
 
+    /**
+     * @param BookingRequest $request
+     * @param int $id
+     * @return RedirectResponse
+     */
     public function book(BookingRequest $request, int $id):RedirectResponse
     {
         $requestData = $request->validated();
@@ -36,6 +44,10 @@ class BookingController extends Controller
         }
     }
 
+    /**
+     * @param Booking $booking
+     * @return View
+     */
     public function show(Booking $booking):View
     {
         $room = $booking->room;
@@ -43,10 +55,14 @@ class BookingController extends Controller
         return view('bookings.show', compact('booking', 'room', 'hotel'));
     }
 
+    /**
+     * @param int $id
+     * @return RedirectResponse
+     */
     public function remove(int $id):RedirectResponse
     {
         $booking = Booking::find($id);
         $booking->delete();
-        return redirect()->route('bookings.index');
+        return redirect()->route('bookings.index')->with('success', 'Booking cancelled successful');
     }
 }
