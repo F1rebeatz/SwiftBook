@@ -7,7 +7,9 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        @vite(['resources/js/app.js', 'resources/css/app.css'])
+        <link rel="stylesheet" href="/public/css/app.css">
+
+        <script src="/public/js/app.js"></script>
 
     </head>
     <body class="font-sans antialiased">
